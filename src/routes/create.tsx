@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { Check, Download, Loader2, Play, Send, Sparkles, Timer } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { generateScript } from "@/lib/ai.functions";
 import { AppShell } from "@/components/app-shell";
 import { GlassCard, ReelThumb, SectionTitle } from "@/components/common";
 import { Button } from "@/components/ui/button";
@@ -41,6 +43,8 @@ function CreatePage() {
   const [voice, setVoice] = useState("Nova — warm female");
   const [captionStyle, setCaptionStyle] = useState("Bold karaoke");
   const [done, setDone] = useState(false);
+  const [title, setTitle] = useState("");
+  const writeScriptFn = useServerFn(generateScript);
 
   const keysFor = (c: string) => providerKeys.filter((k) => k.category === c).map((k) => `${k.provider} — ${k.label}`);
 
