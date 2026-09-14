@@ -3,6 +3,7 @@ import {
   Bell,
   CalendarDays,
   Cable,
+  Film,
   Gauge,
   KeyRound,
   Library,
@@ -25,6 +26,7 @@ import { cn } from "@/lib/utils";
 const nav = [
   { to: "/", label: "Dashboard", icon: Gauge },
   { to: "/create", label: "Create", icon: Sparkles },
+  { to: "/studio", label: "Video Studio", icon: Film },
   { to: "/library", label: "Library", icon: Library },
   { to: "/calendar", label: "Calendar", icon: CalendarDays },
   { to: "/schedule", label: "Schedule", icon: Timer },
