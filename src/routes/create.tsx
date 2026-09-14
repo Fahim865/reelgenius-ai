@@ -58,6 +58,32 @@ function CreatePage() {
     }, 1300);
   }
 
+  async function writeScript() {
+    setBusy(true);
+    setProgress(10);
+    const t = setInterval(() => setProgress((p) => Math.min(p + 7, 92)), 300);
+    try {
+      const result = await writeScriptFn({
+        data: {
+          brief,
+          niche: settings.niche,
+          tone: settings.tone,
+          seconds: settings.videoLength,
+        },
+      });
+      setScript(result.script);
+      if (result.title) setTitle(result.title);
+      setStep(1);
+      toast.success("Script written");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not write the script.");
+    } finally {
+      clearInterval(t);
+      setProgress(100);
+      setBusy(false);
+    }
+  }
+
   return (
     <AppShell title="Create a reel" subtitle={`Niche: ${settings.niche}`}>
       <div className="mb-6 flex flex-wrap gap-2">
@@ -108,7 +134,7 @@ function CreatePage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <Button className="gradient-accent text-primary-foreground" disabled={busy} onClick={() => run(1, "Script written")}>
+                <Button className="gradient-accent text-primary-foreground" disabled={busy} onClick={writeScript}>
                   {busy ? <Loader2 className="mr-2 size-4 animate-spin" /> : <Sparkles className="mr-2 size-4" />}
                   Write the script
                 </Button>
