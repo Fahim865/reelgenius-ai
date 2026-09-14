@@ -3,7 +3,7 @@ import { Suspense, lazy } from "react";
 
 const Studio = lazy(() => import("@/components/studio/Studio"));
 
-export const Route = createFileRoute("/studio")({
+export const Route = createFileRoute("/_authenticated/studio")({
   head: () => ({
     meta: [
       { title: "Video Studio — ReelPilot" },

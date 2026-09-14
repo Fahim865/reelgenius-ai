@@ -1,6 +1,16 @@
 # ReelPilot: real posting, real trends, real media
 
-Turns the current demo into a working agent: accounts, cloud-saved reels, real stock footage, live trend research, an approval queue, and publishing with performance tracking.
+Turns the current demo into a working agent: accounts, cloud-saved reels, real stock footage, live trend research, an approval queue, and publishing with performance tracking.  
+  
+Add a 3D Interactive Cinematic Hero Section on the Landing Page using Three.js / React Three Fiber. 
+
+Requirements:
+
+1. Create a dynamic, open-world game-like environment background with subtle camera movements that respond to mouse scroll and cursor position.
+
+2. Incorporate glowing neon nodes, floating 3D glassmorphic cards, and cinematic particle effects.
+
+3. Ensure high performance and light GPU consumption so it does not lag the video editing canvas or FFmpeg renderer.
 
 ## What changes for you
 

@@ -27,7 +27,7 @@ import { EmptyState, GlassCard, PlatformDots, ReelThumb, SectionTitle, StatusBad
 import { viewsTrend } from "@/data/mock";
 import { useStore } from "@/lib/store";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
       { title: "Dashboard — ReelPilot Agent" },
