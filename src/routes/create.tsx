@@ -149,6 +149,12 @@ function CreatePage() {
           {step === 1 ? (
             <GlassCard>
               <SectionTitle title="Script" />
+              {title ? (
+                <div className="mb-3 space-y-1">
+                  <Label htmlFor="reel-title">Suggested title</Label>
+                  <Input id="reel-title" value={title} onChange={(e) => setTitle(e.target.value)} />
+                </div>
+              ) : null}
               <Textarea rows={10} value={script} onChange={(e) => setScript(e.target.value)} />
               <Button className="gradient-accent mt-4 text-primary-foreground" disabled={busy} onClick={() => run(2, "Scene breakdown ready")}>
                 Break into scenes
