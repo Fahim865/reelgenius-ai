@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useStore } from "@/lib/store";
 
-export const Route = createFileRoute("/connections")({
+export const Route = createFileRoute("/_authenticated/connections")({
   head: () => ({
     meta: [
       { title: "Social Connections — ReelPilot" },

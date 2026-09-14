@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { providerCatalog, type ProviderCategory } from "@/data/mock";
 import { useStore } from "@/lib/store";
 
-export const Route = createFileRoute("/providers")({
+export const Route = createFileRoute("/_authenticated/providers")({
   head: () => ({
     meta: [
       { title: "AI Providers & API Keys — ReelPilot" },

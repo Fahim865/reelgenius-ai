@@ -9,122 +9,123 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AccountRouteImport } from './routes/account'
-import { Route as CalendarRouteImport } from './routes/calendar'
-import { Route as ConnectionsRouteImport } from './routes/connections'
-import { Route as CreateRouteImport } from './routes/create'
-import { Route as LibraryRouteImport } from './routes/library'
-import { Route as OnboardingRouteImport } from './routes/onboarding'
-import { Route as ProvidersRouteImport } from './routes/providers'
-import { Route as ScheduleRouteImport } from './routes/schedule'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as StudioRouteImport } from './routes/studio'
+import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
+import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
+import { Route as AuthenticatedConnectionsRouteImport } from './routes/_authenticated/connections'
+import { Route as AuthenticatedCreateRouteImport } from './routes/_authenticated/create'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedLibraryRouteImport } from './routes/_authenticated/library'
+import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
+import { Route as AuthenticatedProvidersRouteImport } from './routes/_authenticated/providers'
+import { Route as AuthenticatedScheduleRouteImport } from './routes/_authenticated/schedule'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedStudioRouteImport } from './routes/_authenticated/studio'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AccountRoute = AccountRouteImport.update({
-  id: '/account',
+const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
+  id: '/_authenticated/account',
   path: '/account',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CalendarRoute = CalendarRouteImport.update({
-  id: '/calendar',
+const AuthenticatedCalendarRoute = AuthenticatedCalendarRouteImport.update({
+  id: '/_authenticated/calendar',
   path: '/calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ConnectionsRoute = ConnectionsRouteImport.update({
-  id: '/connections',
-  path: '/connections',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CreateRoute = CreateRouteImport.update({
-  id: '/create',
+const AuthenticatedConnectionsRoute =
+  AuthenticatedConnectionsRouteImport.update({
+    id: '/_authenticated/connections',
+    path: '/connections',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedCreateRoute = AuthenticatedCreateRouteImport.update({
+  id: '/_authenticated/create',
   path: '/create',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LibraryRoute = LibraryRouteImport.update({
-  id: '/library',
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/_authenticated/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedLibraryRoute = AuthenticatedLibraryRouteImport.update({
+  id: '/_authenticated/library',
   path: '/library',
   getParentRoute: () => rootRouteImport,
 } as any)
-const OnboardingRoute = OnboardingRouteImport.update({
-  id: '/onboarding',
+const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
+  id: '/_authenticated/onboarding',
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProvidersRoute = ProvidersRouteImport.update({
-  id: '/providers',
+const AuthenticatedProvidersRoute = AuthenticatedProvidersRouteImport.update({
+  id: '/_authenticated/providers',
   path: '/providers',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ScheduleRoute = ScheduleRouteImport.update({
-  id: '/schedule',
+const AuthenticatedScheduleRoute = AuthenticatedScheduleRouteImport.update({
+  id: '/_authenticated/schedule',
   path: '/schedule',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/_authenticated/settings',
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StudioRoute = StudioRouteImport.update({
-  id: '/studio',
+const AuthenticatedStudioRoute = AuthenticatedStudioRouteImport.update({
+  id: '/_authenticated/studio',
   path: '/studio',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/account': typeof AccountRoute
-  '/calendar': typeof CalendarRoute
-  '/connections': typeof ConnectionsRoute
-  '/create': typeof CreateRoute
-  '/library': typeof LibraryRoute
-  '/onboarding': typeof OnboardingRoute
-  '/providers': typeof ProvidersRoute
-  '/schedule': typeof ScheduleRoute
-  '/settings': typeof SettingsRoute
-  '/studio': typeof StudioRoute
+  '/account': typeof AuthenticatedAccountRoute
+  '/calendar': typeof AuthenticatedCalendarRoute
+  '/connections': typeof AuthenticatedConnectionsRoute
+  '/create': typeof AuthenticatedCreateRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/library': typeof AuthenticatedLibraryRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/providers': typeof AuthenticatedProvidersRoute
+  '/schedule': typeof AuthenticatedScheduleRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/studio': typeof AuthenticatedStudioRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/account': typeof AccountRoute
-  '/calendar': typeof CalendarRoute
-  '/connections': typeof ConnectionsRoute
-  '/create': typeof CreateRoute
-  '/library': typeof LibraryRoute
-  '/onboarding': typeof OnboardingRoute
-  '/providers': typeof ProvidersRoute
-  '/schedule': typeof ScheduleRoute
-  '/settings': typeof SettingsRoute
-  '/studio': typeof StudioRoute
+  '/account': typeof AuthenticatedAccountRoute
+  '/calendar': typeof AuthenticatedCalendarRoute
+  '/connections': typeof AuthenticatedConnectionsRoute
+  '/create': typeof AuthenticatedCreateRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/library': typeof AuthenticatedLibraryRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/providers': typeof AuthenticatedProvidersRoute
+  '/schedule': typeof AuthenticatedScheduleRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/studio': typeof AuthenticatedStudioRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/account': typeof AccountRoute
-  '/calendar': typeof CalendarRoute
-  '/connections': typeof ConnectionsRoute
-  '/create': typeof CreateRoute
-  '/library': typeof LibraryRoute
-  '/onboarding': typeof OnboardingRoute
-  '/providers': typeof ProvidersRoute
-  '/schedule': typeof ScheduleRoute
-  '/settings': typeof SettingsRoute
-  '/studio': typeof StudioRoute
+  '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
+  '/_authenticated/connections': typeof AuthenticatedConnectionsRoute
+  '/_authenticated/create': typeof AuthenticatedCreateRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/library': typeof AuthenticatedLibraryRoute
+  '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
+  '/_authenticated/providers': typeof AuthenticatedProvidersRoute
+  '/_authenticated/schedule': typeof AuthenticatedScheduleRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/studio': typeof AuthenticatedStudioRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/account'
     | '/calendar'
     | '/connections'
     | '/create'
+    | '/dashboard'
     | '/library'
     | '/onboarding'
     | '/providers'
@@ -133,11 +134,11 @@ export interface FileRouteTypes {
     | '/studio'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/account'
     | '/calendar'
     | '/connections'
     | '/create'
+    | '/dashboard'
     | '/library'
     | '/onboarding'
     | '/providers'
@@ -146,127 +147,127 @@ export interface FileRouteTypes {
     | '/studio'
   id:
     | '__root__'
-    | '/'
-    | '/account'
-    | '/calendar'
-    | '/connections'
-    | '/create'
-    | '/library'
-    | '/onboarding'
-    | '/providers'
-    | '/schedule'
-    | '/settings'
-    | '/studio'
+    | '/_authenticated/account'
+    | '/_authenticated/calendar'
+    | '/_authenticated/connections'
+    | '/_authenticated/create'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/library'
+    | '/_authenticated/onboarding'
+    | '/_authenticated/providers'
+    | '/_authenticated/schedule'
+    | '/_authenticated/settings'
+    | '/_authenticated/studio'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AccountRoute: typeof AccountRoute
-  CalendarRoute: typeof CalendarRoute
-  ConnectionsRoute: typeof ConnectionsRoute
-  CreateRoute: typeof CreateRoute
-  LibraryRoute: typeof LibraryRoute
-  OnboardingRoute: typeof OnboardingRoute
-  ProvidersRoute: typeof ProvidersRoute
-  ScheduleRoute: typeof ScheduleRoute
-  SettingsRoute: typeof SettingsRoute
-  StudioRoute: typeof StudioRoute
+  AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
+  AuthenticatedCalendarRoute: typeof AuthenticatedCalendarRoute
+  AuthenticatedConnectionsRoute: typeof AuthenticatedConnectionsRoute
+  AuthenticatedCreateRoute: typeof AuthenticatedCreateRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedLibraryRoute: typeof AuthenticatedLibraryRoute
+  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+  AuthenticatedProvidersRoute: typeof AuthenticatedProvidersRoute
+  AuthenticatedScheduleRoute: typeof AuthenticatedScheduleRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedStudioRoute: typeof AuthenticatedStudioRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/account': {
-      id: '/account'
+    '/_authenticated/account': {
+      id: '/_authenticated/account'
       path: '/account'
       fullPath: '/account'
-      preLoaderRoute: typeof AccountRouteImport
+      preLoaderRoute: typeof AuthenticatedAccountRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/calendar': {
-      id: '/calendar'
+    '/_authenticated/calendar': {
+      id: '/_authenticated/calendar'
       path: '/calendar'
       fullPath: '/calendar'
-      preLoaderRoute: typeof CalendarRouteImport
+      preLoaderRoute: typeof AuthenticatedCalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/connections': {
-      id: '/connections'
+    '/_authenticated/connections': {
+      id: '/_authenticated/connections'
       path: '/connections'
       fullPath: '/connections'
-      preLoaderRoute: typeof ConnectionsRouteImport
+      preLoaderRoute: typeof AuthenticatedConnectionsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/create': {
-      id: '/create'
+    '/_authenticated/create': {
+      id: '/_authenticated/create'
       path: '/create'
       fullPath: '/create'
-      preLoaderRoute: typeof CreateRouteImport
+      preLoaderRoute: typeof AuthenticatedCreateRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/library': {
-      id: '/library'
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/library': {
+      id: '/_authenticated/library'
       path: '/library'
       fullPath: '/library'
-      preLoaderRoute: typeof LibraryRouteImport
+      preLoaderRoute: typeof AuthenticatedLibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/onboarding': {
-      id: '/onboarding'
+    '/_authenticated/onboarding': {
+      id: '/_authenticated/onboarding'
       path: '/onboarding'
       fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingRouteImport
+      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/providers': {
-      id: '/providers'
+    '/_authenticated/providers': {
+      id: '/_authenticated/providers'
       path: '/providers'
       fullPath: '/providers'
-      preLoaderRoute: typeof ProvidersRouteImport
+      preLoaderRoute: typeof AuthenticatedProvidersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/schedule': {
-      id: '/schedule'
+    '/_authenticated/schedule': {
+      id: '/_authenticated/schedule'
       path: '/schedule'
       fullPath: '/schedule'
-      preLoaderRoute: typeof ScheduleRouteImport
+      preLoaderRoute: typeof AuthenticatedScheduleRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/settings': {
-      id: '/settings'
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
       path: '/settings'
       fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/studio': {
-      id: '/studio'
+    '/_authenticated/studio': {
+      id: '/_authenticated/studio'
       path: '/studio'
       fullPath: '/studio'
-      preLoaderRoute: typeof StudioRouteImport
+      preLoaderRoute: typeof AuthenticatedStudioRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AccountRoute: AccountRoute,
-  CalendarRoute: CalendarRoute,
-  ConnectionsRoute: ConnectionsRoute,
-  CreateRoute: CreateRoute,
-  LibraryRoute: LibraryRoute,
-  OnboardingRoute: OnboardingRoute,
-  ProvidersRoute: ProvidersRoute,
-  ScheduleRoute: ScheduleRoute,
-  SettingsRoute: SettingsRoute,
-  StudioRoute: StudioRoute,
+  AuthenticatedAccountRoute: AuthenticatedAccountRoute,
+  AuthenticatedCalendarRoute: AuthenticatedCalendarRoute,
+  AuthenticatedConnectionsRoute: AuthenticatedConnectionsRoute,
+  AuthenticatedCreateRoute: AuthenticatedCreateRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedLibraryRoute: AuthenticatedLibraryRoute,
+  AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
+  AuthenticatedProvidersRoute: AuthenticatedProvidersRoute,
+  AuthenticatedScheduleRoute: AuthenticatedScheduleRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedStudioRoute: AuthenticatedStudioRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

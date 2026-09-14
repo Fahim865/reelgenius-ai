@@ -16,7 +16,7 @@ import { scenePreset } from "@/data/mock";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/create")({
+export const Route = createFileRoute("/_authenticated/create")({
   head: () => ({
     meta: [
       { title: "Create a Reel — ReelPilot" },
