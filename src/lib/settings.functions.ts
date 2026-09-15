@@ -64,7 +64,7 @@ export const saveAgentSettings = createServerFn({ method: "POST" })
 
     const { data: row, error } = await context.supabase
       .from("agent_settings")
-      .update(payload)
+      .update(payload as never)
       .eq("user_id", context.userId)
       .select("*")
       .single();
