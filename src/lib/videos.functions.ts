@@ -12,12 +12,22 @@ export type VideoState =
   | "published"
   | "failed";
 
+export type SceneJson = {
+  id: string;
+  caption: string;
+  keywords: string;
+  seconds: number;
+  clipUrl: string | null;
+  clipPreview: string | null;
+  credit: string | null;
+};
+
 export type VideoRow = {
   id: string;
   title: string;
   topic: string | null;
   script: string | null;
-  scenes: unknown;
+  scenes: SceneJson[];
   music_url: string | null;
   storage_path: string | null;
   duration_seconds: number | null;
