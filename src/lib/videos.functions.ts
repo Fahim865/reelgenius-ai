@@ -12,12 +12,22 @@ export type VideoState =
   | "published"
   | "failed";
 
+export type SceneJson = {
+  id: string;
+  caption: string;
+  keywords: string;
+  seconds: number;
+  clipUrl: string | null;
+  clipPreview: string | null;
+  credit: string | null;
+};
+
 export type VideoRow = {
   id: string;
   title: string;
   topic: string | null;
   script: string | null;
-  scenes: unknown;
+  scenes: SceneJson[];
   music_url: string | null;
   storage_path: string | null;
   duration_seconds: number | null;
@@ -48,7 +58,7 @@ export const listVideos = createServerFn({ method: "GET" })
       .order("created_at", { ascending: false })
       .limit(100);
     if (error) throw new Error(error.message);
-    return (data ?? []) as VideoRow[];
+    return (data ?? []) as unknown as VideoRow[];
   });
 
 export const saveVideo = createServerFn({ method: "POST" })
@@ -77,7 +87,7 @@ export const saveVideo = createServerFn({ method: "POST" })
       title: data.title,
       topic: data.topic ?? null,
       script: data.script ?? null,
-      ...(data.scenes ? { scenes: data.scenes } : {}),
+      ...(data.scenes ? { scenes: data.scenes as unknown as never } : {}),
       music_url: data.musicUrl ?? null,
       duration_seconds: data.durationSeconds ?? null,
       trend_id: data.trendId ?? null,
@@ -92,7 +102,7 @@ export const saveVideo = createServerFn({ method: "POST" })
 
     const { data: row, error } = await query;
     if (error) throw new Error(error.message);
-    return row as VideoRow;
+    return row as unknown as VideoRow;
   });
 
 /** Signed upload target for the rendered MP4, scoped to the user's own folder. */
@@ -131,7 +141,7 @@ export const confirmUpload = createServerFn({ method: "POST" })
       .select("*")
       .single();
     if (error) throw new Error(error.message);
-    return row as VideoRow;
+    return row as unknown as VideoRow;
   });
 
 export const getPlaybackUrl = createServerFn({ method: "POST" })
@@ -154,7 +164,7 @@ export const listApprovals = createServerFn({ method: "GET" })
       .in("state", ["pending_approval", "rejected", "rendered"])
       .order("updated_at", { ascending: false });
     if (error) throw new Error(error.message);
-    return (data ?? []) as VideoRow[];
+    return (data ?? []) as unknown as VideoRow[];
   });
 
 export const submitForApproval = createServerFn({ method: "POST" })
