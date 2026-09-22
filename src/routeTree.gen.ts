@@ -22,6 +22,8 @@ import { Route as AuthenticatedProvidersRouteImport } from './routes/_authentica
 import { Route as AuthenticatedScheduleRouteImport } from './routes/_authenticated/schedule'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedStudioRouteImport } from './routes/_authenticated/studio'
+import { Route as ApiPublicHooksAgentTickRouteImport } from './routes/api/public/hooks/agent-tick'
+import { Route as ApiPublicHooksMetricsSweepRouteImport } from './routes/api/public/hooks/metrics-sweep'
 import { Route as ApiPublicOauthMetaCallbackRouteImport } from './routes/api/public/oauth/meta/callback'
 import { Route as ApiPublicOauthYoutubeCallbackRouteImport } from './routes/api/public/oauth/youtube/callback'
 
@@ -90,6 +92,17 @@ const AuthenticatedStudioRoute = AuthenticatedStudioRouteImport.update({
   path: '/studio',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiPublicHooksAgentTickRoute = ApiPublicHooksAgentTickRouteImport.update({
+  id: '/api/public/hooks/agent-tick',
+  path: '/api/public/hooks/agent-tick',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicHooksMetricsSweepRoute =
+  ApiPublicHooksMetricsSweepRouteImport.update({
+    id: '/api/public/hooks/metrics-sweep',
+    path: '/api/public/hooks/metrics-sweep',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicOauthMetaCallbackRoute =
   ApiPublicOauthMetaCallbackRouteImport.update({
     id: '/api/public/oauth/meta/callback',
@@ -117,6 +130,8 @@ export interface FileRoutesByFullPath {
   '/schedule': typeof AuthenticatedScheduleRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/studio': typeof AuthenticatedStudioRoute
+  '/api/public/hooks/agent-tick': typeof ApiPublicHooksAgentTickRoute
+  '/api/public/hooks/metrics-sweep': typeof ApiPublicHooksMetricsSweepRoute
   '/api/public/oauth/meta/callback': typeof ApiPublicOauthMetaCallbackRoute
   '/api/public/oauth/youtube/callback': typeof ApiPublicOauthYoutubeCallbackRoute
 }
@@ -134,6 +149,8 @@ export interface FileRoutesByTo {
   '/schedule': typeof AuthenticatedScheduleRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/studio': typeof AuthenticatedStudioRoute
+  '/api/public/hooks/agent-tick': typeof ApiPublicHooksAgentTickRoute
+  '/api/public/hooks/metrics-sweep': typeof ApiPublicHooksMetricsSweepRoute
   '/api/public/oauth/meta/callback': typeof ApiPublicOauthMetaCallbackRoute
   '/api/public/oauth/youtube/callback': typeof ApiPublicOauthYoutubeCallbackRoute
 }
@@ -152,6 +169,8 @@ export interface FileRoutesById {
   '/_authenticated/schedule': typeof AuthenticatedScheduleRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/studio': typeof AuthenticatedStudioRoute
+  '/api/public/hooks/agent-tick': typeof ApiPublicHooksAgentTickRoute
+  '/api/public/hooks/metrics-sweep': typeof ApiPublicHooksMetricsSweepRoute
   '/api/public/oauth/meta/callback': typeof ApiPublicOauthMetaCallbackRoute
   '/api/public/oauth/youtube/callback': typeof ApiPublicOauthYoutubeCallbackRoute
 }
@@ -171,6 +190,8 @@ export interface FileRouteTypes {
     | '/schedule'
     | '/settings'
     | '/studio'
+    | '/api/public/hooks/agent-tick'
+    | '/api/public/hooks/metrics-sweep'
     | '/api/public/oauth/meta/callback'
     | '/api/public/oauth/youtube/callback'
   fileRoutesByTo: FileRoutesByTo
@@ -188,6 +209,8 @@ export interface FileRouteTypes {
     | '/schedule'
     | '/settings'
     | '/studio'
+    | '/api/public/hooks/agent-tick'
+    | '/api/public/hooks/metrics-sweep'
     | '/api/public/oauth/meta/callback'
     | '/api/public/oauth/youtube/callback'
   id:
@@ -205,6 +228,8 @@ export interface FileRouteTypes {
     | '/_authenticated/schedule'
     | '/_authenticated/settings'
     | '/_authenticated/studio'
+    | '/api/public/hooks/agent-tick'
+    | '/api/public/hooks/metrics-sweep'
     | '/api/public/oauth/meta/callback'
     | '/api/public/oauth/youtube/callback'
   fileRoutesById: FileRoutesById
@@ -212,6 +237,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ApiPublicHooksAgentTickRoute: typeof ApiPublicHooksAgentTickRoute
+  ApiPublicHooksMetricsSweepRoute: typeof ApiPublicHooksMetricsSweepRoute
   ApiPublicOauthMetaCallbackRoute: typeof ApiPublicOauthMetaCallbackRoute
   ApiPublicOauthYoutubeCallbackRoute: typeof ApiPublicOauthYoutubeCallbackRoute
 }
@@ -309,6 +336,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudioRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/hooks/agent-tick': {
+      id: '/api/public/hooks/agent-tick'
+      path: '/api/public/hooks/agent-tick'
+      fullPath: '/api/public/hooks/agent-tick'
+      preLoaderRoute: typeof ApiPublicHooksAgentTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/metrics-sweep': {
+      id: '/api/public/hooks/metrics-sweep'
+      path: '/api/public/hooks/metrics-sweep'
+      fullPath: '/api/public/hooks/metrics-sweep'
+      preLoaderRoute: typeof ApiPublicHooksMetricsSweepRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/oauth/meta/callback': {
       id: '/api/public/oauth/meta/callback'
       path: '/api/public/oauth/meta/callback'
@@ -360,6 +401,8 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ApiPublicHooksAgentTickRoute: ApiPublicHooksAgentTickRoute,
+  ApiPublicHooksMetricsSweepRoute: ApiPublicHooksMetricsSweepRoute,
   ApiPublicOauthMetaCallbackRoute: ApiPublicOauthMetaCallbackRoute,
   ApiPublicOauthYoutubeCallbackRoute: ApiPublicOauthYoutubeCallbackRoute,
 }
