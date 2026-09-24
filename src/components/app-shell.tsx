@@ -81,7 +81,7 @@ export function AppShell({
 
         <nav className="mt-6 space-y-1">
           {nav.map((item) => {
-            const active = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
+            const active = pathname.startsWith(item.to);
             return (
               <Link
                 key={item.to}
