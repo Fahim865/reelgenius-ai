@@ -46,9 +46,9 @@ function ApprovalsPage() {
   const push = useMutation({
     mutationFn: (videoId: string) => publish({ data: { videoId } }),
     onSuccess: (result) => {
-      const failed = result.results.filter((r) => r.status !== "published");
+      const failed = result.filter((r) => !r.ok);
       if (failed.length === 0) toast.success("Published everywhere");
-      else toast.warning(`Some platforms failed: ${failed.map((f) => f.platform).join(", ")}`);
+      else toast.warning(`Some platforms failed: ${failed.map((f) => `${f.platform}: ${f.message}`).join(" · ")}`);
       queryClient.invalidateQueries({ queryKey: ["approvals"] });
       queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
