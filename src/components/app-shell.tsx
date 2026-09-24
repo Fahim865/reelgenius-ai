@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
+  BarChart3,
   Bell,
   CalendarDays,
   Cable,
@@ -8,8 +9,10 @@ import {
   KeyRound,
   Library,
   Menu,
+  Radar,
   Rocket,
   Settings2,
+  ShieldCheck,
   Sparkles,
   Timer,
   UserRound,
@@ -24,9 +27,12 @@ import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 const nav = [
-  { to: "/", label: "Dashboard", icon: Gauge },
+  { to: "/dashboard", label: "Dashboard", icon: Gauge },
+  { to: "/trends", label: "Trend Radar", icon: Radar },
   { to: "/create", label: "Create", icon: Sparkles },
   { to: "/studio", label: "Video Studio", icon: Film },
+  { to: "/approvals", label: "Approvals", icon: ShieldCheck },
+  { to: "/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/library", label: "Library", icon: Library },
   { to: "/calendar", label: "Calendar", icon: CalendarDays },
   { to: "/schedule", label: "Schedule", icon: Timer },
