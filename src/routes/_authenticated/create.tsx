@@ -281,7 +281,7 @@ function CreatePage() {
                     <SelectItem value="none">No music</SelectItem>
                     {(music.data?.tracks ?? []).map((track) => (
                       <SelectItem key={track.url} value={track.url}>
-                        {track.name} — {track.artist}
+                        {track.title} — {track.artist}
                       </SelectItem>
                     ))}
                   </SelectContent>
