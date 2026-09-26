@@ -47,7 +47,7 @@ function SettingsPage() {
   }, [settings.data, draft]);
 
   const persist = useMutation({
-    mutationFn: (patch: Parameters<typeof save>[0]["data"]) => save({ data: patch }),
+    mutationFn: (patch: SettingsPatch) => save({ data: patch }),
     onSuccess: (row) => {
       setDraft(row);
       queryClient.setQueryData(["agent-settings"], row);
