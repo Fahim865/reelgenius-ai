@@ -34,6 +34,19 @@ const targets = [
   { id: "instagram", name: "Instagram Reels", color: "oklch(0.65 0.22 350)" },
 ] as const;
 
+type SettingsPatch = {
+  niche?: string;
+  tone?: string;
+  language?: string;
+  videoLength?: number;
+  frequency?: number;
+  timeSlots?: string[];
+  platforms?: ("youtube" | "facebook" | "instagram")[];
+  mode?: "auto" | "review";
+  killSwitch?: boolean;
+  active?: boolean;
+};
+
 function SettingsPage() {
   const queryClient = useQueryClient();
   const fetchSettings = useServerFn(getAgentSettings);
