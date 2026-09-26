@@ -52,7 +52,7 @@ function CreatePage() {
 
   const settings = useQuery({ queryKey: ["agent-settings"], queryFn: () => fetchSettings() });
   const trends = useQuery({ queryKey: ["trends"], queryFn: () => fetchTrends() });
-  const music = useQuery({ queryKey: ["music"], queryFn: () => fetchMusic({ data: { query: "upbeat" } }) });
+  const music = useQuery({ queryKey: ["music"], queryFn: () => fetchMusic() });
 
   const [step, setStep] = useState(0);
   const [busy, setBusy] = useState(false);
