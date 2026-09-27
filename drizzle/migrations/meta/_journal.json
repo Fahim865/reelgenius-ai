@@ -36,6 +36,13 @@
       "when": 1790515877235,
       "tag": "0004_grant_app_config_sandbox",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790516368096,
+      "tag": "0005_competitors",
+      "breakpoints": true
     }
   ]
 }
