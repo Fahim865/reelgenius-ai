@@ -29,6 +29,13 @@
       "when": 1790428747711,
       "tag": "0003_schedule_agent_cron",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790515877235,
+      "tag": "0004_grant_app_config_sandbox",
+      "breakpoints": true
     }
   ]
 }
