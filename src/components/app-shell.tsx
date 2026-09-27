@@ -17,6 +17,7 @@ import {
   Timer,
   UserRound,
   X,
+  Swords,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ import { cn } from "@/lib/utils";
 const nav = [
   { to: "/dashboard", label: "Dashboard", icon: Gauge },
   { to: "/trends", label: "Trend Radar", icon: Radar },
+  { to: "/competitors", label: "Competitors", icon: Swords },
   { to: "/create", label: "Create", icon: Sparkles },
   { to: "/studio", label: "Video Studio", icon: Film },
   { to: "/approvals", label: "Approvals", icon: ShieldCheck },

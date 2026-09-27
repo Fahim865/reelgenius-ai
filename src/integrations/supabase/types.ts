@@ -109,6 +109,42 @@ export type Database = {
           },
         ]
       }
+      competitors: {
+        Row: {
+          created_at: string
+          cta_style: string | null
+          followers: string | null
+          handle: string
+          id: string
+          platform: string
+          top_reels: Json
+          user_id: string
+          why_it_works: string | null
+        }
+        Insert: {
+          created_at?: string
+          cta_style?: string | null
+          followers?: string | null
+          handle: string
+          id?: string
+          platform?: string
+          top_reels?: Json
+          user_id: string
+          why_it_works?: string | null
+        }
+        Update: {
+          created_at?: string
+          cta_style?: string | null
+          followers?: string | null
+          handle?: string
+          id?: string
+          platform?: string
+          top_reels?: Json
+          user_id?: string
+          why_it_works?: string | null
+        }
+        Relationships: []
+      }
       insights: {
         Row: {
           summary: string
