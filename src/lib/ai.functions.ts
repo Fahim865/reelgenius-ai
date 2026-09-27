@@ -10,17 +10,20 @@ const ScriptInput = z.object({
   trendId: z.string().uuid().optional(),
 });
 
-const SYSTEM = `You are a short-form video scriptwriter for 9:16 vertical reels.
-Rules:
-- The first 5 seconds MUST be a pattern-interrupt hook.
-- Fast pacing, short spoken lines (max ~12 words per line).
-- Write for the ear, not the page. No stage directions, no emojis, no markdown.
-- End with a single clear call to action.
+const SYSTEM = `You are a viral short-form scriptwriter for 9:16 vertical reels.
+Structure every script in four timed beats:
+1. HOOK (0-5s): pattern interrupt — bold claim, shocking stat, or curiosity gap. Never start with "Hey guys" or an intro.
+2. PROBLEM (~20% of runtime): name the viewer's pain in their own words; raise the stakes.
+3. SOLUTION (~55% of runtime): 2-4 fast, concrete steps or reveals; each line opens a new loop so viewers keep watching.
+4. CTA (last 3-5s): one clear action, modeled on the competitor CTA styles given (comment a keyword, follow for part 2, save this).
+Pacing: max ~12 spoken words per line, a new visual every 2-4 seconds. Write for the ear. No emojis, no markdown, no stage directions.
 Return plain text in exactly this shape:
-HOOK: <one line>
-BODY:
-<one spoken line per row, 6-12 rows>
-CTA: <one line>
+HOOK [0-5s]: <one line>
+PROBLEM [Xs-Ys]:
+<spoken lines>
+SOLUTION [Xs-Ys]:
+<spoken lines>
+CTA [Xs-Ys]: <one line>
 TITLE: <high-CTR title under 60 characters>`;
 
 export const generateScript = createServerFn({ method: "POST" })
@@ -50,6 +53,19 @@ export const generateScript = createServerFn({ method: "POST" })
       ? `\nWhat performed best on this account so far (follow these lessons):\n${insight.summary}`
       : "";
 
+    const { data: comps } = await context.supabase
+      .from("competitors")
+      .select("handle, cta_style, top_reels")
+      .limit(5);
+    const compContext = comps?.length
+      ? `\nTop competitors in this niche (borrow their hook patterns and CTA styles, never copy wording):\n${comps
+          .map((c) => {
+            const hooks = ((c.top_reels ?? []) as Array<{ hook?: string }>).map((r) => r.hook).filter(Boolean).slice(0, 2).join(" | ");
+            return `- ${c.handle}: CTA "${c.cta_style ?? ""}"; hooks: ${hooks}`;
+          })
+          .join("\n")}`
+      : "";
+
     const text = (
       await callAi([
         { role: "system", content: SYSTEM },
@@ -58,7 +74,7 @@ export const generateScript = createServerFn({ method: "POST" })
           content: `Topic: ${data.brief}
 Niche: ${data.niche ?? "general"}
 Tone: ${data.tone ?? "punchy, friendly, no fluff"}
-Target length: ${data.seconds ?? 40} seconds of speech.${trendContext}${learned}`,
+Target length: ${data.seconds ?? 40} seconds of speech.${trendContext}${compContext}${learned}`,
         },
       ])
     ).trim();
@@ -102,7 +118,7 @@ export const buildScenes = createServerFn({ method: "POST" })
       },
       {
         role: "user",
-        content: `Total runtime: ${data.seconds} seconds. Split into 6-12 scenes whose seconds sum to about the runtime.
+        content: `Total runtime: ${data.seconds} seconds. Split into 6-12 scenes whose seconds sum to about the runtime. Follow the beat timings in the script ([Xs-Ys]): the HOOK gets 1-2 quick scenes (2-3s each), PROBLEM and SOLUTION lines get one scene each (2-4s), the CTA gets its own final scene. Never put beat labels in captions.
 Script:
 ${data.script}
 
