@@ -1,5 +1,5 @@
 # Roadmap
-- [ ] Live competitor scanner via YouTube Data API (falls back to AI research without key)
-- [ ] Mood-matched music picker (Jamendo; built-in list fallback)
-- [ ] Keep keys user-addable later: Connections lists each missing key + how to add
-- [ ] Blocked (user keys): real YouTube Shorts post + real analytics numbers
+- [x] Live competitor scanner via YouTube Data API (falls back to AI research without key)
+- [x] Mood-matched music picker (Jamendo; built-in list fallback)
+- [x] Keep keys user-addable later: Connections lists each missing key + how to add
+- [ ] Blocked (user keys, deferred by user): real YouTube Shorts post + real analytics numbers
