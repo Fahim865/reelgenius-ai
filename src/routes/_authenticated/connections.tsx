@@ -92,7 +92,9 @@ function ConnectionsPage() {
     ? [
         !credentials.data.youtube ? "YouTube" : null,
         !credentials.data.meta ? "Facebook & Instagram" : null,
-        !credentials.data.pexels ? "stock footage" : null,
+        !credentials.data.pexels ? "stock footage (Pexels)" : null,
+        !credentials.data.music ? "mood-matched music (Jamendo)" : null,
+        !credentials.data.youtubeData ? "live competitor stats (YouTube Data API key)" : null,
       ].filter(Boolean)
     : [];
 
@@ -105,8 +107,8 @@ function ConnectionsPage() {
             <div>
               <p className="font-medium">Still waiting on setup keys</p>
               <p className="mt-1 text-sm text-muted-foreground">
-                {missing.join(", ")} can't be used until the matching keys are saved. Ask me to add them and I'll open a
-                secure form.
+                {missing.join(", ")} can't be used until the matching keys are saved. Whenever you're ready, just type "add my keys" in the chat and a
+                secure form opens — everything else keeps working in the meantime.
               </p>
             </div>
           </div>

@@ -52,7 +52,6 @@ function CreatePage() {
 
   const settings = useQuery({ queryKey: ["agent-settings"], queryFn: () => fetchSettings() });
   const trends = useQuery({ queryKey: ["trends"], queryFn: () => fetchTrends() });
-  const music = useQuery({ queryKey: ["music"], queryFn: () => fetchMusic() });
 
   const [step, setStep] = useState(0);
   const [busy, setBusy] = useState(false);
@@ -63,6 +62,12 @@ function CreatePage() {
   const [title, setTitle] = useState("");
   const [scenes, setScenes] = useState<Scene[]>([]);
   const [musicUrl, setMusicUrl] = useState<string>("");
+  const music = useQuery({
+    queryKey: ["music", script.slice(0, 200)],
+    queryFn: () => fetchMusic({ data: { script: script || undefined } }),
+    staleTime: Infinity,
+    enabled: step >= 2,
+  });
 
   useEffect(() => {
     if (!trendId || brief) return;
@@ -272,6 +277,7 @@ function CreatePage() {
               <div className="mt-4 space-y-2">
                 <Label className="flex items-center gap-2">
                   <Music2 className="size-4" /> Background music
+                  {music.data?.mood ? <span className="text-xs font-normal text-muted-foreground">matched to a {music.data.mood} mood</span> : null}
                 </Label>
                 <Select value={musicUrl || "none"} onValueChange={(v) => setMusicUrl(v === "none" ? "" : v)}>
                   <SelectTrigger>

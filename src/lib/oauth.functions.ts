@@ -58,4 +58,5 @@ export const getCredentialStatus = createServerFn({ method: "GET" })
     meta: Boolean(process.env['META_APP_ID'] && process.env['META_APP_SECRET']),
     pexels: Boolean(process.env['PEXELS_API_KEY']),
     music: Boolean(process.env['JAMENDO_CLIENT_ID']),
+    youtubeData: Boolean(process.env['YOUTUBE_API_KEY']),
   }));

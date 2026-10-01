@@ -39,8 +39,8 @@ function CompetitorsPage() {
 
   const scan = useMutation({
     mutationFn: () => runScan({ data: { niche: niche.trim() || settings.data?.niche || "technology" } }),
-    onSuccess: () => {
-      toast.success("Competitors updated — the script writer will learn from them");
+    onSuccess: (r) => {
+      toast.success(r.source === "youtube" ? "Live YouTube stats loaded — the script writer will learn from them" : "Competitors updated from AI research (add a YouTube Data API key for live stats)");
       qc.invalidateQueries({ queryKey: ["competitors"] });
     },
     onError: (e: Error) => toast.error(e.message),
