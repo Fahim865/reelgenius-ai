@@ -45,6 +45,16 @@ export const scanCompetitors = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i: unknown) => z.object({ niche: z.string().min(2).max(200) }).parse(i))
   .handler(async ({ data, context }) => {
+    const ytKey = process.env['YOUTUBE_API_KEY'];
+    if (ytKey) {
+      const rows = await scanYouTube(ytKey, data.niche, context.userId);
+      if (rows.length) {
+        await context.supabase.from("competitors").delete().eq("user_id", context.userId);
+        const { error } = await context.supabase.from("competitors").insert(rows);
+        if (error) throw new Error(error.message);
+        return { count: rows.length, source: "youtube" as const };
+      }
+    }
     const { callAiJson } = await import("./ai-core.server");
     const result = await callAiJson<{
       accounts: Array<{
@@ -86,5 +96,79 @@ Return 5 accounts: {"accounts":[{"handle":"@name","platform":"youtube|instagram|
     await context.supabase.from("competitors").delete().eq("user_id", context.userId);
     const { error } = await context.supabase.from("competitors").insert(rows);
     if (error) throw new Error(error.message);
-    return { count: rows.length };
+    return { count: rows.length, source: "ai" as const };
   });
+
+async function yt<T>(path: string, params: Record<string, string>, key: string): Promise<T> {
+  const url = new URL(`https://www.googleapis.com/youtube/v3/${path}`);
+  for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
+  url.searchParams.set("key", key);
+  const res = await fetch(url);
+  if (!res.ok) {
+    const body = await res.text();
+    console.error(`YouTube Data API failed [${res.status}]: ${body}`);
+    throw new Error(`YouTube competitor scan failed [${res.status}]. Check the YouTube Data API key.`);
+  }
+  return (await res.json()) as T;
+}
+
+/** Live scan: most-viewed Shorts in the niche from the last 30 days, grouped by channel. */
+async function scanYouTube(key: string, niche: string, userId: string) {
+  const after = new Date(Date.now() - 30 * 86400_000).toISOString();
+  const search = await yt<{ items?: Array<{ id: { videoId?: string }; snippet: { channelId: string; channelTitle: string } }> }>(
+    "search",
+    { part: "snippet", q: `${niche} #shorts`, type: "video", videoDuration: "short", order: "viewCount", publishedAfter: after, maxResults: "50" },
+    key,
+  );
+  const ids = (search.items ?? []).map((i) => i.id.videoId).filter(Boolean) as string[];
+  if (!ids.length) return [];
+  const videos = await yt<{ items?: Array<{ id: string; snippet: { title: string; description: string; channelId: string; channelTitle: string }; statistics: { viewCount?: string } }> }>(
+    "videos",
+    { part: "snippet,statistics", id: ids.join(",") },
+    key,
+  );
+  const byChannel = new Map<string, { handle: string; reels: Array<CompetitorReel & { desc: string }> }>();
+  for (const v of videos.items ?? []) {
+    const c = byChannel.get(v.snippet.channelId) ?? { handle: v.snippet.channelTitle, reels: [] };
+    c.reels.push({ title: v.snippet.title, views: Number(v.statistics.viewCount ?? 0), hook: v.snippet.title, desc: v.snippet.description });
+    byChannel.set(v.snippet.channelId, c);
+  }
+  const top = [...byChannel.entries()]
+    .map(([id, c]) => ({ id, ...c, total: c.reels.reduce((s, r) => s + r.views, 0) }))
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 6);
+  const channels = await yt<{ items?: Array<{ id: string; statistics: { subscriberCount?: string } }> }>(
+    "channels",
+    { part: "statistics", id: top.map((t) => t.id).join(",") },
+    key,
+  );
+  const subs = new Map((channels.items ?? []).map((c) => [c.id, Number(c.statistics.subscriberCount ?? 0)]));
+
+  // Let the AI read the real titles/descriptions to extract structure + CTA style
+  let analysis: Record<string, { why: string; cta: string }> = {};
+  try {
+    const { callAiJson } = await import("./ai-core.server");
+    const r = await callAiJson<{ accounts: Array<{ handle: string; why: string; cta: string }> }>([
+      { role: "system", content: "You analyse real short-form video data. Return strict JSON only." },
+      {
+        role: "user",
+        content: `For each channel, explain in one sentence why its Shorts win (hook/structure pattern) and quote the call-to-action style its descriptions use.\n${top
+          .map((t) => `${t.handle}: ${t.reels.slice(0, 3).map((r) => `"${r.title}" (${r.views} views) desc: ${r.desc.slice(0, 200)}`).join(" | ")}`)
+          .join("\n")}\nReturn {"accounts":[{"handle":"","why":"","cta":""}]}`,
+      },
+    ]);
+    analysis = Object.fromEntries((r.accounts ?? []).map((a) => [a.handle, { why: a.why, cta: a.cta }]));
+  } catch {
+    // analysis is optional; real numbers still save
+  }
+  const fmt = (n: number) => Intl.NumberFormat("en", { notation: "compact" }).format(n);
+  return top.map((t) => ({
+    user_id: userId,
+    handle: t.handle.slice(0, 80),
+    platform: "youtube",
+    followers: subs.get(t.id) ? fmt(subs.get(t.id)!) : null,
+    why_it_works: analysis[t.handle]?.why ?? `${fmt(t.total)} Shorts views in the last 30 days.`,
+    cta_style: analysis[t.handle]?.cta ?? null,
+    top_reels: t.reels.sort((a, b) => b.views - a.views).slice(0, 3).map(({ title, views, hook }) => ({ title, views, hook })),
+  }));
+}

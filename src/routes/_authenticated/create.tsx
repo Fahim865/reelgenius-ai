@@ -66,6 +66,7 @@ function CreatePage() {
     queryKey: ["music", script.slice(0, 200)],
     queryFn: () => fetchMusic({ data: { script: script || undefined } }),
     staleTime: Infinity,
+    enabled: step >= 2,
   });
 
   useEffect(() => {
