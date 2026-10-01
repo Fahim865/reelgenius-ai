@@ -98,11 +98,36 @@ export const searchStockClips = createServerFn({ method: "POST" })
     return { configured: true, clips };
   });
 
-export const listMusic = createServerFn({ method: "GET" })
+export const listMusic = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async () => {
+  .inputValidator((input: unknown) => z.object({ script: z.string().max(6000).optional() }).optional().parse(input))
+  .handler(async ({ data }) => {
+    // Detect the script's mood so the bed matches the story
+    let mood = "";
+    let tags = "upbeat+electronic";
+    if (data?.script && data.script.length > 20) {
+      try {
+        const { callAiJson } = await import("./ai-core.server");
+        const r = await callAiJson<{ mood: string; tags: string[] }>([
+          { role: "system", content: "Pick background music for a short vertical video. Return strict JSON only." },
+          {
+            role: "user",
+            content: `Script:\n${data.script.slice(0, 3000)}\n\nReturn {"mood":"one word","tags":["2-3 Jamendo music tags like energetic, cinematic, chill, corporate, hiphop, electronic, inspiring, dark"]}`,
+          },
+        ]);
+        mood = String(r.mood ?? "").toLowerCase().slice(0, 30);
+        const clean = (r.tags ?? []).map((t) => String(t).toLowerCase().replace(/[^a-z]/g, "")).filter(Boolean).slice(0, 3);
+        if (clean.length) tags = clean.join("+");
+      } catch {
+        // mood detection is best-effort
+      }
+    }
+
+    const rankFallback = () =>
+      [...FALLBACK_MUSIC].sort((a, b) => Number(b.mood === mood || tags.includes(b.mood)) - Number(a.mood === mood || tags.includes(a.mood)));
+
     const key = process.env['JAMENDO_CLIENT_ID'];
-    if (!key) return { source: "curated" as const, tracks: FALLBACK_MUSIC };
+    if (!key) return { source: "curated" as const, mood, tracks: rankFallback() };
 
     const url = new URL("https://api.jamendo.com/v3.0/tracks");
     url.searchParams.set("client_id", key);
@@ -110,10 +135,14 @@ export const listMusic = createServerFn({ method: "GET" })
     url.searchParams.set("limit", "12");
     url.searchParams.set("audioformat", "mp32");
     url.searchParams.set("include", "musicinfo");
-    url.searchParams.set("tags", "upbeat+electronic");
+    url.searchParams.set("order", "popularity_month");
+    url.searchParams.set("fuzzytags", tags);
 
     const res = await fetch(url);
-    if (!res.ok) return { source: "curated" as const, tracks: FALLBACK_MUSIC };
+    if (!res.ok) {
+      console.error(`Jamendo failed [${res.status}]: ${await res.text()}`);
+      return { source: "curated" as const, mood, tracks: rankFallback() };
+    }
     const json = (await res.json()) as {
       results?: Array<{ id: string; name: string; artist_name: string; audio: string; musicinfo?: { tags?: { vartags?: string[] } } }>;
     };
@@ -124,5 +153,5 @@ export const listMusic = createServerFn({ method: "GET" })
       url: t.audio,
       mood: t.musicinfo?.tags?.vartags?.[0] ?? "royalty-free",
     }));
-    return { source: "jamendo" as const, tracks: tracks.length ? tracks : FALLBACK_MUSIC };
+    return { source: "jamendo" as const, mood, tracks: tracks.length ? tracks : rankFallback() };
   });
