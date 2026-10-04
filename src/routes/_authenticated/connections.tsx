@@ -107,8 +107,7 @@ function ConnectionsPage() {
             <div>
               <p className="font-medium">Still waiting on setup keys</p>
               <p className="mt-1 text-sm text-muted-foreground">
-                {missing.join(", ")} can't be used until the matching keys are saved. Whenever you're ready, just type "add my keys" in the chat and a
-                secure form opens — everything else keeps working in the meantime.
+                {missing.join(", ")} can't be used until the matching keys are saved. Add or remove them anytime on the API Keys page — everything else keeps working in the meantime.
               </p>
             </div>
           </div>

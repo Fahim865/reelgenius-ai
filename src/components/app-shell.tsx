@@ -39,6 +39,7 @@ const nav = [
   { to: "/calendar", label: "Calendar", icon: CalendarDays },
   { to: "/schedule", label: "Schedule", icon: Timer },
   { to: "/connections", label: "Connections", icon: Cable },
+  { to: "/api-keys", label: "API Keys", icon: KeyRound },
   { to: "/providers", label: "AI Providers", icon: KeyRound },
   { to: "/settings", label: "Agent Settings", icon: Settings2 },
   { to: "/account", label: "Account", icon: UserRound },

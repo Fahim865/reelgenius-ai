@@ -18,8 +18,9 @@ export const Route = createFileRoute("/api/public/oauth/meta/callback")({
         const userId = readState(state);
         if (!userId) return fail("This connection link expired. Try again.");
 
-        const appId = process.env['META_APP_ID'];
-        const appSecret = process.env['META_APP_SECRET'];
+        const { getKey } = await import("@/lib/keys.server");
+        const appId = await getKey("META_APP_ID", userId);
+        const appSecret = await getKey("META_APP_SECRET", userId);
         if (!appId || !appSecret) return fail("Meta credentials are not set up yet.");
 
         const tokenUrl = new URL(`${GRAPH}/oauth/access_token`);

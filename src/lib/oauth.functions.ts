@@ -25,9 +25,10 @@ export const getConnectUrl = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { makeState } = await import("./oauth-state.server");
+    const { getKey } = await import("./keys.server");
 
     if (data.platform === "youtube") {
-      const clientId = process.env['YOUTUBE_CLIENT_ID'];
+      const clientId = await getKey("YOUTUBE_CLIENT_ID", context.userId);
       if (!clientId) return { configured: false as const, url: null };
       const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
       url.searchParams.set("client_id", clientId);
@@ -40,7 +41,7 @@ export const getConnectUrl = createServerFn({ method: "POST" })
       return { configured: true as const, url: url.toString() };
     }
 
-    const appId = process.env['META_APP_ID'];
+    const appId = await getKey("META_APP_ID", context.userId);
     if (!appId) return { configured: false as const, url: null };
     const url = new URL("https://www.facebook.com/v21.0/dialog/oauth");
     url.searchParams.set("client_id", appId);
@@ -53,10 +54,12 @@ export const getConnectUrl = createServerFn({ method: "POST" })
 
 export const getCredentialStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async () => ({
-    youtube: Boolean(process.env['YOUTUBE_CLIENT_ID'] && process.env['YOUTUBE_CLIENT_SECRET']),
-    meta: Boolean(process.env['META_APP_ID'] && process.env['META_APP_SECRET']),
-    pexels: Boolean(process.env['PEXELS_API_KEY']),
-    music: Boolean(process.env['JAMENDO_CLIENT_ID']),
-    youtubeData: Boolean(process.env['YOUTUBE_API_KEY']),
-  }));
+  .handler(async ({ context }) => {
+    const { getKey } = await import("./keys.server");
+    const k = (n: Parameters<typeof getKey>[0]) => getKey(n, context.userId).then(Boolean);
+    const [yi, ys, mi, ms, px, jm, yd] = await Promise.all([
+      k("YOUTUBE_CLIENT_ID"), k("YOUTUBE_CLIENT_SECRET"), k("META_APP_ID"), k("META_APP_SECRET"),
+      k("PEXELS_API_KEY"), k("JAMENDO_CLIENT_ID"), k("YOUTUBE_API_KEY"),
+    ]);
+    return { youtube: yi && ys, meta: mi && ms, pexels: px, music: jm, youtubeData: yd };
+  });

@@ -50,8 +50,9 @@ export const searchStockClips = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) =>
     z.object({ query: z.string().min(1).max(120), perPage: z.number().int().min(1).max(12).default(6) }).parse(input),
   )
-  .handler(async ({ data }) => {
-    const key = process.env['PEXELS_API_KEY'];
+  .handler(async ({ data, context }) => {
+    const { getKey } = await import("./keys.server");
+    const key = await getKey("PEXELS_API_KEY", context.userId);
     if (!key) {
       return { configured: false, clips: [] as StockClip[] };
     }
@@ -101,7 +102,7 @@ export const searchStockClips = createServerFn({ method: "POST" })
 export const listMusic = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ script: z.string().max(6000).optional() }).optional().parse(input))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     // Detect the script's mood so the bed matches the story
     let mood = "";
     let tags = "upbeat+electronic";
@@ -126,7 +127,8 @@ export const listMusic = createServerFn({ method: "POST" })
     const rankFallback = () =>
       [...FALLBACK_MUSIC].sort((a, b) => Number(b.mood === mood || tags.includes(b.mood)) - Number(a.mood === mood || tags.includes(a.mood)));
 
-    const key = process.env['JAMENDO_CLIENT_ID'];
+    const { getKey } = await import("./keys.server");
+    const key = await getKey("JAMENDO_CLIENT_ID", context.userId);
     if (!key) return { source: "curated" as const, mood, tracks: rankFallback() };
 
     const url = new URL("https://api.jamendo.com/v3.0/tracks");

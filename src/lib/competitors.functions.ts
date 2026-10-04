@@ -45,7 +45,8 @@ export const scanCompetitors = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i: unknown) => z.object({ niche: z.string().min(2).max(200) }).parse(i))
   .handler(async ({ data, context }) => {
-    const ytKey = process.env['YOUTUBE_API_KEY'];
+    const { getKey } = await import("./keys.server");
+    const ytKey = await getKey("YOUTUBE_API_KEY", context.userId);
     if (ytKey) {
       const rows = await scanYouTube(ytKey, data.niche, context.userId);
       if (rows.length) {
