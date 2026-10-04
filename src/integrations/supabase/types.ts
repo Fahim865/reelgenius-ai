@@ -356,6 +356,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_api_keys: {
+        Row: {
+          name: string
+          updated_at: string
+          user_id: string
+          value: string
+        }
+        Insert: {
+          name: string
+          updated_at?: string
+          user_id: string
+          value: string
+        }
+        Update: {
+          name?: string
+          updated_at?: string
+          user_id?: string
+          value?: string
+        }
+        Relationships: []
+      }
       videos: {
         Row: {
           created_at: string
