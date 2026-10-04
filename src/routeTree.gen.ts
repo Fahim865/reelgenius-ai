@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
+import { Route as AuthenticatedApiKeysRouteImport } from './routes/_authenticated/api-keys'
 import { Route as AuthenticatedApprovalsRouteImport } from './routes/_authenticated/approvals'
 import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
 import { Route as AuthenticatedCompetitorsRouteImport } from './routes/_authenticated/competitors'
@@ -54,6 +55,11 @@ const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
 const AuthenticatedAnalyticsRoute = AuthenticatedAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedApiKeysRoute = AuthenticatedApiKeysRouteImport.update({
+  id: '/api-keys',
+  path: '/api-keys',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedApprovalsRoute = AuthenticatedApprovalsRouteImport.update({
@@ -152,6 +158,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/account': typeof AuthenticatedAccountRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
+  '/api-keys': typeof AuthenticatedApiKeysRoute
   '/approvals': typeof AuthenticatedApprovalsRoute
   '/calendar': typeof AuthenticatedCalendarRoute
   '/competitors': typeof AuthenticatedCompetitorsRoute
@@ -175,6 +182,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/account': typeof AuthenticatedAccountRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
+  '/api-keys': typeof AuthenticatedApiKeysRoute
   '/approvals': typeof AuthenticatedApprovalsRoute
   '/calendar': typeof AuthenticatedCalendarRoute
   '/competitors': typeof AuthenticatedCompetitorsRoute
@@ -200,6 +208,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
+  '/_authenticated/api-keys': typeof AuthenticatedApiKeysRoute
   '/_authenticated/approvals': typeof AuthenticatedApprovalsRoute
   '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
   '/_authenticated/competitors': typeof AuthenticatedCompetitorsRoute
@@ -225,6 +234,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/account'
     | '/analytics'
+    | '/api-keys'
     | '/approvals'
     | '/calendar'
     | '/competitors'
@@ -248,6 +258,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/account'
     | '/analytics'
+    | '/api-keys'
     | '/approvals'
     | '/calendar'
     | '/competitors'
@@ -272,6 +283,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/account'
     | '/_authenticated/analytics'
+    | '/_authenticated/api-keys'
     | '/_authenticated/approvals'
     | '/_authenticated/calendar'
     | '/_authenticated/competitors'
@@ -336,6 +348,13 @@ declare module '@tanstack/react-router' {
       path: '/analytics'
       fullPath: '/analytics'
       preLoaderRoute: typeof AuthenticatedAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/api-keys': {
+      id: '/_authenticated/api-keys'
+      path: '/api-keys'
+      fullPath: '/api-keys'
+      preLoaderRoute: typeof AuthenticatedApiKeysRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/approvals': {
@@ -463,6 +482,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
   AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
+  AuthenticatedApiKeysRoute: typeof AuthenticatedApiKeysRoute
   AuthenticatedApprovalsRoute: typeof AuthenticatedApprovalsRoute
   AuthenticatedCalendarRoute: typeof AuthenticatedCalendarRoute
   AuthenticatedCompetitorsRoute: typeof AuthenticatedCompetitorsRoute
@@ -481,6 +501,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
   AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
+  AuthenticatedApiKeysRoute: AuthenticatedApiKeysRoute,
   AuthenticatedApprovalsRoute: AuthenticatedApprovalsRoute,
   AuthenticatedCalendarRoute: AuthenticatedCalendarRoute,
   AuthenticatedCompetitorsRoute: AuthenticatedCompetitorsRoute,

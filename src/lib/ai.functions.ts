@@ -105,7 +105,7 @@ const ScenesInput = z.object({
 export const buildScenes = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => ScenesInput.parse(input))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     const { callAiJson } = await import("./ai-core.server");
 
     const plan = await callAiJson<{
@@ -129,7 +129,8 @@ Return JSON: {"scenes":[{"caption":"","keywords":"","seconds":0}]}`,
     const scenes = (plan.scenes ?? []).slice(0, 14);
     if (scenes.length === 0) throw new Error("Could not split that script into scenes.");
 
-    const pexelsKey = process.env['PEXELS_API_KEY'];
+    const { getKey } = await import("./keys.server");
+    const pexelsKey = await getKey("PEXELS_API_KEY", context.userId);
     const out: Scene[] = [];
 
     for (const [i, s] of scenes.entries()) {

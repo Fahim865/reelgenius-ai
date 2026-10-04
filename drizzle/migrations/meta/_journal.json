@@ -43,6 +43,13 @@
       "when": 1790516368096,
       "tag": "0005_competitors",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791109826656,
+      "tag": "0006_user_api_keys",
+      "breakpoints": true
     }
   ]
 }

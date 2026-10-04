@@ -16,8 +16,9 @@ export const Route = createFileRoute("/api/public/oauth/youtube/callback")({
         const userId = readState(state);
         if (!userId) return fail("This connection link expired. Try again.");
 
-        const clientId = process.env['YOUTUBE_CLIENT_ID'];
-        const clientSecret = process.env['YOUTUBE_CLIENT_SECRET'];
+        const { getKey } = await import("@/lib/keys.server");
+        const clientId = await getKey("YOUTUBE_CLIENT_ID", userId);
+        const clientSecret = await getKey("YOUTUBE_CLIENT_SECRET", userId);
         if (!clientId || !clientSecret) return fail("YouTube credentials are not set up yet.");
 
         const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
