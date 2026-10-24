@@ -59,6 +59,36 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_usage: {
+        Row: {
+          action: string
+          created_at: string
+          id: number
+          input_tokens: number
+          model: string | null
+          output_tokens: number
+          user_id: string
+        }
+        Insert: {
+          action?: string
+          created_at?: string
+          id?: never
+          input_tokens?: number
+          model?: string | null
+          output_tokens?: number
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: never
+          input_tokens?: number
+          model?: string | null
+          output_tokens?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       app_config: {
         Row: {
           key: string
@@ -278,6 +308,36 @@ export type Database = {
         }
         Relationships: []
       }
+      prompt_templates: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          is_builtin: boolean
+          name: string
+          niche: string | null
+          user_id: string | null
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          is_builtin?: boolean
+          name: string
+          niche?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          is_builtin?: boolean
+          name?: string
+          niche?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       social_accounts: {
         Row: {
           access_token: string | null
@@ -313,6 +373,42 @@ export type Database = {
           platform?: string
           refresh_token?: string | null
           status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          current_period_end: string | null
+          id: string
+          plan: string
+          provider: string | null
+          provider_subscription_id: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          plan?: string
+          provider?: string | null
+          provider_subscription_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          plan?: string
+          provider?: string | null
+          provider_subscription_id?: string | null
+          status?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []

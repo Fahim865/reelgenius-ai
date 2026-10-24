@@ -2,5 +2,10 @@
 - [x] Live competitor scanner via YouTube Data API (falls back to AI research without key)
 - [x] Mood-matched music picker (Jamendo; built-in list fallback)
 - [x] Keep keys user-addable later: Connections lists each missing key + how to add
-- [ ] Blocked (user keys, deferred by user): real YouTube Shorts post + real analytics numbers
 - [x] In-app API Keys settings: add/remove own keys anytime (per user, server-only read)
+- [ ] AI-suggested prompt templates + user-saved custom templates (Create page)
+- [ ] Content generation pipeline view: trend → script → scenes → media → render → approval → publish per reel
+- [ ] Export options: quality (720p/1080p/high bitrate), subtitles on/off, watermark toggle + custom watermark
+- [ ] AI usage tracking (every AI call logged per user, shown in Account) — tracking only, no blocking
+- [ ] Subscription: agent setup requires paid plan OR user's own API key (BYOK free); needs payment provider enable + user confirmation
+- [ ] Blocked (user keys, deferred by user): real YouTube Shorts post + real analytics numbers
