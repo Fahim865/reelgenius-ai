@@ -115,7 +115,7 @@ export const listMusic = createServerFn({ method: "POST" })
             role: "user",
             content: `Script:\n${data.script.slice(0, 3000)}\n\nReturn {"mood":"one word","tags":["2-3 Jamendo music tags like energetic, cinematic, chill, corporate, hiphop, electronic, inspiring, dark"]}`,
           },
-        ]);
+        ], { userId: context.userId, action: "mood" });
         mood = String(r.mood ?? "").toLowerCase().slice(0, 30);
         const clean = (r.tags ?? []).map((t) => String(t).toLowerCase().replace(/[^a-z]/g, "")).filter(Boolean).slice(0, 3);
         if (clean.length) tags = clean.join("+");
