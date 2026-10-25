@@ -11,19 +11,93 @@ export class AiGatewayError extends Error {
   }
 }
 
-export async function callAi(messages: ChatMessage[], opts?: { json?: boolean; model?: string }) {
-  const key = process.env['LOVABLE_API_KEY'];
+type ProviderRoute = { url: string; key: string; model: string; label: string };
+
+/** When a user saved their own AI provider key, calls route through it (any
+ * OpenAI-compatible endpoint) instead of the built-in gateway. */
+async function resolveOwnProvider(userId: string, model?: string): Promise<ProviderRoute | null> {
+  try {
+    const { getKey } = await import("./keys.server");
+    const openai = await getKey("OPENAI_API_KEY", userId);
+    if (openai) {
+      return {
+        url: "https://api.openai.com/v1/chat/completions",
+        key: openai,
+        model: model ?? (await getKey("AI_PROVIDER_MODEL", userId)) ?? "gpt-4o-mini",
+        label: "own OpenAI key",
+      };
+    }
+    const custom = await getKey("AI_PROVIDER_API_KEY", userId);
+    if (custom) {
+      const base = (await getKey("AI_PROVIDER_BASE_URL", userId))?.replace(/\/+$/, "");
+      if (base) {
+        return {
+          url: `${base}/chat/completions`,
+          key: custom,
+          model: model ?? (await getKey("AI_PROVIDER_MODEL", userId)) ?? "gpt-4o-mini",
+          label: "own provider key",
+        };
+      }
+    }
+  } catch {
+    // fall through to the built-in gateway
+  }
+  return null;
+}
+
+type Usage = { prompt_tokens?: number; completion_tokens?: number } | undefined;
+
+/** Best-effort usage tracking. Never breaks the AI call itself. */
+async function logUsage(userId: string, action: string, model: string, usage: Usage) {
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin.from("ai_usage").insert({
+      user_id: userId,
+      action,
+      model,
+      input_tokens: Math.max(0, Math.round(usage?.prompt_tokens ?? 0)),
+      output_tokens: Math.max(0, Math.round(usage?.completion_tokens ?? 0)),
+    });
+  } catch (error) {
+    console.error("[ai-usage] failed to log usage", error);
+  }
+}
+
+export async function callAi(
+  messages: ChatMessage[],
+  opts?: { json?: boolean; model?: string; userId?: string; action?: string },
+) {
+  const gatewayKey = process.env['LOVABLE_API_KEY'];
+  let url = GATEWAY;
+  let key = gatewayKey;
+  let model = opts?.model ?? MODEL;
+  let routeLabel = "built-in AI";
+
+  if (opts?.userId) {
+    const own = await resolveOwnProvider(opts.userId, opts.model);
+    if (own) {
+      url = own.url;
+      key = own.key;
+      model = own.model;
+      routeLabel = own.label;
+    }
+  }
+
   if (!key) throw new AiGatewayError(401, "AI is not configured for this project.");
 
-  const res = await fetch(GATEWAY, {
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (url === GATEWAY) {
+    headers['Lovable-API-Key'] = key;
+    headers['X-Lovable-AIG-SDK'] = "fetch";
+  } else {
+    headers['Authorization'] = `Bearer ${key}`;
+  }
+
+  const res = await fetch(url, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Lovable-API-Key": key,
-      "X-Lovable-AIG-SDK": "fetch",
-    },
+    headers,
     body: JSON.stringify({
-      model: opts?.model ?? MODEL,
+      model,
       messages,
       ...(opts?.json ? { response_format: { type: "json_object" } } : {}),
     }),
@@ -36,12 +110,23 @@ export async function callAi(messages: ChatMessage[], opts?: { json?: boolean; m
     throw new AiGatewayError(res.status, `AI request failed [${res.status}]: ${body}`);
   }
 
-  const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
+  const data = (await res.json()) as {
+    choices?: Array<{ message?: { content?: string } }>;
+    usage?: Usage;
+  };
+
+  if (opts?.userId) {
+    await logUsage(opts.userId, opts.action ?? "other", `${routeLabel}: ${model}`, data.usage);
+  }
+
   return data.choices?.[0]?.message?.content ?? "";
 }
 
-export async function callAiJson<T>(messages: ChatMessage[]): Promise<T> {
-  const raw = await callAi(messages, { json: true });
+export async function callAiJson<T>(
+  messages: ChatMessage[],
+  opts?: { model?: string; userId?: string; action?: string },
+): Promise<T> {
+  const raw = await callAi(messages, { json: true, ...opts });
   const cleaned = raw.trim().replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
   try {
     return JSON.parse(cleaned) as T;
