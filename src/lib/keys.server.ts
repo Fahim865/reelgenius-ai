@@ -6,7 +6,14 @@ export const KEY_NAMES = [
   "PEXELS_API_KEY",
   "YOUTUBE_API_KEY",
   "JAMENDO_CLIENT_ID",
+  "OPENAI_API_KEY",
+  "AI_PROVIDER_API_KEY",
+  "AI_PROVIDER_BASE_URL",
+  "AI_PROVIDER_MODEL",
 ] as const;
+
+/** Keys that, when present, let a user run the agent on their own AI budget. */
+export const OWN_AI_KEY_NAMES = ["OPENAI_API_KEY", "AI_PROVIDER_API_KEY"] as const;
 export type KeyName = (typeof KEY_NAMES)[number];
 
 /** User-saved key (from the API Keys page) wins; falls back to a project-level secret. */
