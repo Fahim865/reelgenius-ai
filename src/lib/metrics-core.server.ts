@@ -118,7 +118,7 @@ export async function summarizeInsightsForUser(db: Db, userId: string) {
         "You analyse short-form video performance and write a compact coaching brief that another AI will use when writing the next script. Be concrete about hook styles, topics, pacing and CTAs. Max 180 words, bullet points.",
     },
     { role: "user", content: `Recent posts and their numbers:\n${lines}\n\nWrite: what worked, what flopped, and 4 rules for the next script.` },
-  ]);
+  ], { userId, action: "insights" });
 
   await db
     .from("insights")

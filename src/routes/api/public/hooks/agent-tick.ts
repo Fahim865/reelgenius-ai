@@ -25,6 +25,14 @@ export const Route = createFileRoute("/api/public/hooks/agent-tick")({
         for (const settings of users ?? []) {
           const userId = settings.user_id as string;
           try {
+            // 0. Gate: a paid plan or the user's own AI key is required to run the agent.
+            const { canUserRunAgent } = await import("@/lib/billing-core.server");
+            const gate = await canUserRunAgent(userId);
+            if (!gate.allowed) {
+              report.push({ user: userId, action: `skipped: ${gate.reason}` });
+              continue;
+            }
+
             // 1. Research a fresh trend.
             const research = await callAiJson<{ trends: Array<{ topic: string; angle: string; rationale: string; competitors: string; score: number }> }>([
               {
@@ -36,7 +44,7 @@ export const Route = createFileRoute("/api/public/hooks/agent-tick")({
                 content: `Niche: "${settings.niche}". Find the single best topic to post about in the next hour.
 Return JSON: {"trends":[{"topic":"","angle":"","rationale":"","competitors":"","score":0}]}`,
               },
-            ]);
+            ], { userId, action: "agent-trend" });
 
             const best = research.trends?.[0];
             if (!best) {
@@ -75,7 +83,7 @@ Return JSON: {"trends":[{"topic":"","angle":"","rationale":"","competitors":"","
                 role: "user",
                 content: `Topic: ${best.topic}\nAngle: ${best.angle}\nNiche: ${settings.niche}\nTone: ${settings.tone}\nLength: ${settings.video_length}s${insight?.summary ? `\nLessons from past posts:\n${insight.summary}` : ""}`,
               },
-            ]);
+            ], { userId, action: "agent-script" });
 
             const title = script.match(/^TITLE:\s*(.+)$/m)?.[1]?.trim() ?? best.topic.slice(0, 60);
 

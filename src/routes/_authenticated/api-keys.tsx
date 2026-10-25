@@ -33,6 +33,10 @@ const INFO: Record<string, { label: string; help: string; where: string }> = {
   PEXELS_API_KEY: { label: "Pexels API key", help: "Real royalty-free stock video for every scene.", where: "pexels.com/api" },
   YOUTUBE_API_KEY: { label: "YouTube Data API key", help: "Real competitor view & subscriber counts.", where: "Google Cloud Console → Credentials → API key" },
   JAMENDO_CLIENT_ID: { label: "Jamendo Client ID", help: "Mood-matched royalty-free music library.", where: "devportal.jamendo.com" },
+  OPENAI_API_KEY: { label: "OpenAI API key", help: "Runs scripts, trends and the agent on your own OpenAI budget.", where: "platform.openai.com → API keys" },
+  AI_PROVIDER_API_KEY: { label: "Own AI provider key", help: "Any OpenAI-compatible provider (router, reseller, self-hosted).", where: "Your provider's dashboard → API keys" },
+  AI_PROVIDER_BASE_URL: { label: "Provider base URL", help: "Endpoint of your provider, e.g. https://api.provider.com/v1 (required with the key above).", where: "Your provider's docs → API endpoint" },
+  AI_PROVIDER_MODEL: { label: "Default model (optional)", help: "Model id used by the agent, e.g. gpt-4o-mini. Defaults to gpt-4o-mini.", where: "Your provider's model list" },
 };
 
 function ApiKeysPage() {

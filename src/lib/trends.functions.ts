@@ -60,7 +60,7 @@ Find ${data.count} topics with the highest short-form viral potential right now.
 For each: a concrete "topic" (not a category), an "angle" (the specific take that would out-perform competitors), a "rationale" (why it spikes now), "competitors" (what similar creators are already publishing and the gap left open), and "score" 0-100 for viral potential.
 Return JSON: {"trends":[{"topic":"","angle":"","rationale":"","competitors":"","score":0}]}`,
       },
-    ]);
+    ], { userId: context.userId, action: "trends" });
 
     const rows = (result.trends ?? []).slice(0, data.count).map((t) => ({
       user_id: context.userId,

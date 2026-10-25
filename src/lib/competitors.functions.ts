@@ -77,7 +77,7 @@ export const scanCompetitors = createServerFn({ method: "POST" })
         content: `Niche: ${data.niche}
 Return 5 accounts: {"accounts":[{"handle":"@name","platform":"youtube|instagram|tiktok","followers":"1.2M","why_it_works":"one sentence","cta_style":"their typical call to action, quoted","top_reels":[{"title":"","views":0,"hook":"first line spoken"}]}]} with 3 top_reels each.`,
       },
-    ]);
+    ], { userId: context.userId, action: "competitor-scan" });
 
     const rows = (result.accounts ?? []).slice(0, 8).map((a) => ({
       user_id: context.userId,
@@ -157,7 +157,7 @@ async function scanYouTube(key: string, niche: string, userId: string) {
           .map((t) => `${t.handle}: ${t.reels.slice(0, 3).map((r) => `"${r.title}" (${r.views} views) desc: ${r.desc.slice(0, 200)}`).join(" | ")}`)
           .join("\n")}\nReturn {"accounts":[{"handle":"","why":"","cta":""}]}`,
       },
-    ]);
+    ], { userId, action: "competitor-analysis" });
     analysis = Object.fromEntries((r.accounts ?? []).map((a) => [a.handle, { why: a.why, cta: a.cta }]));
   } catch {
     // analysis is optional; real numbers still save

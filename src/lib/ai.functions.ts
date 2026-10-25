@@ -76,7 +76,7 @@ Niche: ${data.niche ?? "general"}
 Tone: ${data.tone ?? "punchy, friendly, no fluff"}
 Target length: ${data.seconds ?? 40} seconds of speech.${trendContext}${compContext}${learned}`,
         },
-      ])
+      ], { userId: context.userId, action: "script" })
     ).trim();
 
     if (!text) throw new Error("The model returned an empty script. Try rephrasing the brief.");
@@ -124,7 +124,7 @@ ${data.script}
 
 Return JSON: {"scenes":[{"caption":"","keywords":"","seconds":0}]}`,
       },
-    ]);
+    ], { userId: context.userId, action: "scenes" });
 
     const scenes = (plan.scenes ?? []).slice(0, 14);
     if (scenes.length === 0) throw new Error("Could not split that script into scenes.");

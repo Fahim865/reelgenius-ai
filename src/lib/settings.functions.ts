@@ -49,6 +49,12 @@ export const saveAgentSettings = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
+    // The agent only runs on a paid plan or with the user's own AI key.
+    if (data.active === true) {
+      const { canUserRunAgent } = await import("./billing-core.server");
+      const gate = await canUserRunAgent(context.userId);
+      if (!gate.allowed) throw new Error(gate.reason);
+    }
     await context.supabase.rpc("ensure_user_bootstrap");
     const payload: Record<string, unknown> = { updated_at: new Date().toISOString() };
     if (data.niche !== undefined) payload['niche'] = data.niche;
